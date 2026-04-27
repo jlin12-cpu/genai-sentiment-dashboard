@@ -62,7 +62,7 @@ HISTORY_END   = datetime(2026, 4, 24, tzinfo=timezone.utc)  # Q1 2026 end
 # Set high enough that we don't hit the cap before the date filter does.
 # ChatGPT may have 100k+ reviews in this window — 50k gives us headroom.
 FIRST_RUN_COUNT  = 100000
-SUBSEQUENT_COUNT = 20000   # max to fetch per app on weekly runs
+SUBSEQUENT_COUNT = 100000   # max to fetch per app on weekly runs
 
 # ── Logging ────────────────────────────────────────────────────────────────────
 def log(message):
