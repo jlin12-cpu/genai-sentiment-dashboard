@@ -136,3 +136,13 @@
 [2026-04-27 05:56:44]   ✓ Perplexity: 0 reviews (2026-04-27 → now)
 [2026-04-27 05:56:44] No new reviews found
 [2026-04-27 05:56:44] Done
+[2026-04-27 10:17:02] =======================================================
+[2026-04-27 10:17:02] Weekly run — fetching reviews since 2026-04-27 05:54:10 UTC
+[2026-04-27 10:17:02] Loaded existing CSV: 123,206 rows
+[2026-04-27 10:17:50]   ✓ ChatGPT: 0 reviews (2026-04-27 → now)
+[2026-04-27 10:18:03]   ✓ Claude: 0 reviews (2026-04-27 → now)
+[2026-04-27 10:18:53]   ✓ Google_Gemini: 0 reviews (2026-04-27 → now)
+[2026-04-27 10:19:35]   ✓ Microsoft_Copilot: 0 reviews (2026-04-27 → now)
+[2026-04-27 10:20:21]   ✓ Perplexity: 0 reviews (2026-04-27 → now)
+[2026-04-27 10:20:22] No new reviews found
+[2026-04-27 10:20:22] Done
