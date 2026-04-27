@@ -21,7 +21,7 @@ from elevenlabs import VoiceSettings
 from datetime import datetime
 from dotenv import load_dotenv
 
-load_dotenv()
+load_dotenv(override=False)
 
 ANTHROPIC_API_KEY  = os.getenv('ANTHROPIC_API_KEY')
 ELEVENLABS_API_KEY = os.getenv('ELEVENLABS_API_KEY')
