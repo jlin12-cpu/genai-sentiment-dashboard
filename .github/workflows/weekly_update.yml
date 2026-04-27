@@ -56,3 +56,14 @@ jobs:
           git add -f dashboard/weekly_update.mp4
           git diff --staged --quiet || git commit -m "Weekly update $(date +'%Y-%m-%d')"
           git push
+
+      - name: Restore Google credentials
+        run: |
+          echo "${{ secrets.GOOGLE_CREDENTIALS }}" | base64 -d > credentials.json
+
+      - name: Send weekly email report
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PW: ${{ secrets.GMAIL_APP_PW }}
+        run: python subscriber_mailer.py --send
