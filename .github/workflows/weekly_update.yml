@@ -18,10 +18,16 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Install system fonts
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y fonts-liberation fonts-dejavu
+
       - name: Install dependencies
         run: |
           pip install pandas google-play-scraper textblob python-dotenv \
-                      anthropic gspread google-auth
+                      anthropic elevenlabs pillow moviepy==1.0.3 \
+                      gspread google-auth
 
       - name: Run scraper
         env:
@@ -34,10 +40,16 @@ jobs:
       - name: Run build_dashboard_data
         run: python dashboard/build_dashboard_data.py
 
-      - name: Commit and push updated data
+      - name: Generate weekly video
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+        run: python generate_video_v4.py
+
+      - name: Commit and push updated data + video
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add dashboard/insights_data.json logs/
-          git diff --staged --quiet || git commit -m "Weekly data update $(date +'%Y-%m-%d')"
+          git add dashboard/insights_data.json dashboard/weekly_update.mp4 logs/
+          git diff --staged --quiet || git commit -m "Weekly update $(date +'%Y-%m-%d')"
           git push
