@@ -100,3 +100,19 @@
 [2026-04-25 15:36:46]   Perplexity               : 1,521
 [2026-04-25 15:36:46] Added 123,206 new reviews → total 123,206 rows
 [2026-04-25 15:36:46] Done — run clean_data.py next to fill Sentiment_Polarity and Review_Theme
+[2026-04-27 03:30:31] =======================================================
+[2026-04-27 03:30:31] Weekly run — fetching reviews since 2026-04-25 20:33:42 UTC
+[2026-04-27 03:30:32] Loaded existing CSV: 123,206 rows
+[2026-04-27 03:31:19]   ✓ ChatGPT: 108 reviews (2026-04-25 → now)
+[2026-04-27 03:31:33]   ✓ Claude: 13 reviews (2026-04-25 → now)
+[2026-04-27 03:32:30]   ✓ Google_Gemini: 80 reviews (2026-04-25 → now)
+[2026-04-27 03:33:19]   ✓ Microsoft_Copilot: 3 reviews (2026-04-25 → now)
+[2026-04-27 03:34:06]   ✓ Perplexity: 6 reviews (2026-04-25 → now)
+[2026-04-27 03:34:06] Reviews fetched per app:
+[2026-04-27 03:34:06]   ChatGPT                  : 108
+[2026-04-27 03:34:06]   Claude                   : 13
+[2026-04-27 03:34:06]   Google_Gemini            : 75
+[2026-04-27 03:34:06]   Microsoft_Copilot        : 3
+[2026-04-27 03:34:06]   Perplexity               : 6
+[2026-04-27 03:34:07] Added 205 new reviews → total 123,411 rows
+[2026-04-27 03:34:07] Done — run clean_data.py next to fill Sentiment_Polarity and Review_Theme
