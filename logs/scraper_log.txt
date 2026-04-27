@@ -1,0 +1,102 @@
+[2026-04-11 21:29:48] ==================================================
+[2026-04-11 21:29:48] Scraper run started
+[2026-04-11 21:29:48] Loaded existing CSV: 50000 rows
+[2026-04-11 21:29:48] ✓ ChatGPT: fetched 200 reviews
+[2026-04-11 21:29:49] ✓ Claude: fetched 200 reviews
+[2026-04-11 21:29:50] ✓ Google_Gemini: fetched 200 reviews
+[2026-04-11 21:29:50] ✓ Microsoft_Copilot: fetched 200 reviews
+[2026-04-11 21:29:50] ✓ Perplexity: fetched 200 reviews
+[2026-04-11 21:29:50] Added 1000 new reviews
+[2026-04-11 21:29:50] Total rows in CSV: 51000
+[2026-04-11 21:29:50] Scraper run completed
+[2026-04-11 23:20:42] ==================================================
+[2026-04-11 23:20:42] Scraper run started (FIRST RUN — backfilling history)
+[2026-04-11 23:20:43] Loaded existing CSV: 51,000 rows
+[2026-04-11 23:20:44]   ✓ ChatGPT: 2000 new reviews
+[2026-04-11 23:20:45]   ✓ Claude: 2000 new reviews
+[2026-04-11 23:20:46]   ✓ Google_Gemini: 2000 new reviews
+[2026-04-11 23:20:47]   ✓ Microsoft_Copilot: 2000 new reviews
+[2026-04-11 23:20:48]   ✓ Perplexity: 2000 new reviews
+[2026-04-11 23:20:48] Added 9,001 new reviews
+[2026-04-11 23:20:48] Total rows in CSV: 60,001
+[2026-04-11 23:20:48] Scraper run completed — run clean_data.py to fill Sentiment_Polarity and Review_Theme
+[2026-04-11 23:26:09] ==================================================
+[2026-04-11 23:26:09] Scraper run started (FIRST RUN — backfilling history)
+[2026-04-11 23:26:09] Loaded existing CSV: 60,001 rows
+[2026-04-11 23:26:11]   ✓ ChatGPT: 5000 new reviews
+[2026-04-11 23:26:13]   ✓ Claude: 5000 new reviews
+[2026-04-11 23:26:16]   ✓ Google_Gemini: 5000 new reviews
+[2026-04-11 23:26:18]   ✓ Microsoft_Copilot: 5000 new reviews
+[2026-04-11 23:26:20]   ✓ Perplexity: 5000 new reviews
+[2026-04-11 23:26:20] Added 15,000 new reviews
+[2026-04-11 23:26:20] Total rows in CSV: 75,001
+[2026-04-11 23:26:20] Scraper run completed — run clean_data.py to fill Sentiment_Polarity and Review_Theme
+[2026-04-11 23:53:47] ==================================================
+[2026-04-11 23:53:47] Scraper run started (FIRST RUN — backfilling history)
+[2026-04-11 23:53:47] No existing CSV found — will create new file
+[2026-04-11 23:53:49]   ✓ ChatGPT: 5000 new reviews
+[2026-04-11 23:53:51]   ✓ Claude: 5000 new reviews
+[2026-04-11 23:53:54]   ✓ Google_Gemini: 5000 new reviews
+[2026-04-11 23:53:55]   ✓ Microsoft_Copilot: 5000 new reviews
+[2026-04-11 23:53:57]   ✓ Perplexity: 5000 new reviews
+[2026-04-11 23:53:57] Added 25,000 new reviews
+[2026-04-11 23:53:57] Total rows in CSV: 25,000
+[2026-04-11 23:53:57] Scraper run completed — run clean_data.py to fill Sentiment_Polarity and Review_Theme
+[2026-04-12 00:46:42] ==================================================
+[2026-04-12 00:46:42] Scraper run started (last run: 2026-04-11 23:53:47)
+[2026-04-12 00:46:42] Loaded existing CSV: 25,000 rows
+[2026-04-12 00:46:50]   ✓ ChatGPT: 0 new reviews
+[2026-04-12 00:46:57]   ✓ Claude: 0 new reviews
+[2026-04-12 00:47:06]   ✓ Google_Gemini: 0 new reviews
+[2026-04-12 00:47:14]   ✓ Microsoft_Copilot: 0 new reviews
+[2026-04-12 00:47:20]   ✓ Perplexity: 0 new reviews
+[2026-04-12 00:47:20] No new reviews found
+[2026-04-12 00:47:20] Scraper run completed
+[2026-04-25 14:59:20] =======================================================
+[2026-04-25 14:59:20] FIRST RUN — backfilling 2026-01-01 → 2026-04-10 (same window for all apps)
+[2026-04-25 14:59:20] Loaded existing CSV: 25,000 rows
+[2026-04-25 14:59:42]   ✓ ChatGPT: 14773 reviews (2026-01-01 → 2026-04-10)
+[2026-04-25 14:59:53]   ✓ Claude: 18002 reviews (2026-01-01 → 2026-04-10)
+[2026-04-25 15:00:16]   ✓ Google_Gemini: 20008 reviews (2026-01-01 → 2026-04-10)
+[2026-04-25 15:00:34]   ✓ Microsoft_Copilot: 12139 reviews (2026-01-01 → 2026-04-10)
+[2026-04-25 15:00:53]   ✓ Perplexity: 8811 reviews (2026-01-01 → 2026-04-10)
+[2026-04-25 15:00:53] Reviews fetched per app:
+[2026-04-25 15:00:53]   ChatGPT                  : 12,753
+[2026-04-25 15:00:53]   Claude                   : 13,272
+[2026-04-25 15:00:53]   Google_Gemini            : 17,737
+[2026-04-25 15:00:53]   Microsoft_Copilot        : 7,260
+[2026-04-25 15:00:53]   Perplexity               : 3,899
+[2026-04-25 15:00:54] Added 54,921 new reviews → total 79,921 rows
+[2026-04-25 15:00:54] Done — run clean_data.py next to fill Sentiment_Polarity and Review_Theme
+[2026-04-25 15:21:52] =======================================================
+[2026-04-25 15:21:52] FIRST RUN — backfilling 2026-01-01 → 2026-04-10 (same window for all apps)
+[2026-04-25 15:21:52] No existing CSV — will create new file
+[2026-04-25 15:22:12]   ✓ ChatGPT: 14750 reviews (2026-01-01 → 2026-04-10)
+[2026-04-25 15:22:25]   ✓ Claude: 18002 reviews (2026-01-01 → 2026-04-10)
+[2026-04-25 15:22:47]   ✓ Google_Gemini: 20012 reviews (2026-01-01 → 2026-04-10)
+[2026-04-25 15:23:05]   ✓ Microsoft_Copilot: 12139 reviews (2026-01-01 → 2026-04-10)
+[2026-04-25 15:23:25]   ✓ Perplexity: 8811 reviews (2026-01-01 → 2026-04-10)
+[2026-04-25 15:23:25] Reviews fetched per app:
+[2026-04-25 15:23:25]   ChatGPT                  : 14,750
+[2026-04-25 15:23:25]   Claude                   : 18,002
+[2026-04-25 15:23:25]   Google_Gemini            : 20,012
+[2026-04-25 15:23:25]   Microsoft_Copilot        : 12,139
+[2026-04-25 15:23:25]   Perplexity               : 8,811
+[2026-04-25 15:23:25] Added 73,714 new reviews → total 73,714 rows
+[2026-04-25 15:23:25] Done — run clean_data.py next to fill Sentiment_Polarity and Review_Theme
+[2026-04-25 15:33:42] =======================================================
+[2026-04-25 15:33:42] FIRST RUN — backfilling 2026-04-01 → 2026-04-24 (same window for all apps)
+[2026-04-25 15:33:42] No existing CSV — will create new file
+[2026-04-25 15:34:23]   ✓ ChatGPT: 61362 reviews (2026-04-01 → 2026-04-24)
+[2026-04-25 15:34:35]   ✓ Claude: 4752 reviews (2026-04-01 → 2026-04-24)
+[2026-04-25 15:35:25]   ✓ Google_Gemini: 53559 reviews (2026-04-01 → 2026-04-24)
+[2026-04-25 15:36:03]   ✓ Microsoft_Copilot: 2012 reviews (2026-04-01 → 2026-04-24)
+[2026-04-25 15:36:46]   ✓ Perplexity: 1521 reviews (2026-04-01 → 2026-04-24)
+[2026-04-25 15:36:46] Reviews fetched per app:
+[2026-04-25 15:36:46]   ChatGPT                  : 61,362
+[2026-04-25 15:36:46]   Claude                   : 4,752
+[2026-04-25 15:36:46]   Google_Gemini            : 53,559
+[2026-04-25 15:36:46]   Microsoft_Copilot        : 2,012
+[2026-04-25 15:36:46]   Perplexity               : 1,521
+[2026-04-25 15:36:46] Added 123,206 new reviews → total 123,206 rows
+[2026-04-25 15:36:46] Done — run clean_data.py next to fill Sentiment_Polarity and Review_Theme

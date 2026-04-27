@@ -1,0 +1,7 @@
+cat >> .gitignore << 'EOF'
+.env
+credentials.json
+tmp_video/
+*.mp4
+__pycache__/
+EOF

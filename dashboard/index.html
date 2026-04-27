@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generative AI — User Sentiment</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+</head>
+<body>
+
+<!-- ── Sidebar ──────────────────────────────────────────────────────────── -->
+<aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+        <div class="logo-mark">G</div>
+        <div class="logo-text">
+            <span class="logo-title">GenAI</span>
+            <span class="logo-sub">Sentiment</span>
+        </div>
+    </div>
+
+    <nav class="sidebar-nav">
+        <div class="nav-section-label">Overview</div>
+        <a class="nav-item active" data-page="intro" onclick="navigate('intro')">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 3h12M2 8h8M2 13h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            About This Project
+        </a>
+        <a class="nav-item" data-page="overview" onclick="navigate('overview')">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.5"/></svg>
+            All Products
+        </a>
+        <a class="nav-item" data-page="compare" onclick="navigate('compare')">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M5 3v10M11 3v10M2 8h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+            Compare Products
+        </a>
+
+        <div class="nav-section-label" style="margin-top:1.5rem">Products</div>
+        <a class="nav-item" data-page="ChatGPT" onclick="navigate('ChatGPT')">
+            <span class="nav-dot" style="background:#10a37f"></span>ChatGPT
+        </a>
+        <a class="nav-item" data-page="Claude" onclick="navigate('Claude')">
+            <span class="nav-dot" style="background:#d97757"></span>Claude
+        </a>
+        <a class="nav-item" data-page="Google_Gemini" onclick="navigate('Google_Gemini')">
+            <span class="nav-dot" style="background:#4285f4"></span>Google Gemini
+        </a>
+        <a class="nav-item" data-page="Microsoft_Copilot" onclick="navigate('Microsoft_Copilot')">
+            <span class="nav-dot" style="background:#0078d4"></span>Microsoft Copilot
+        </a>
+        <a class="nav-item" data-page="Perplexity" onclick="navigate('Perplexity')">
+            <span class="nav-dot" style="background:#22d3ee"></span>Perplexity
+        </a>
+
+        <div class="nav-section-label" style="margin-top:1.5rem">Explore</div>
+        <a class="nav-item" data-page="reviews" onclick="navigate('reviews')">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4a1 1 0 011-1h10a1 1 0 011 1v7a1 1 0 01-1 1H5l-3 2V4z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
+            Review Browser
+        </a>
+    </nav>
+
+    <div class="sidebar-footer">
+        <div class="footer-data-info">Data: Google Play · Q1 2026</div>
+    </div>
+</aside>
+
+<!-- ── Main ─────────────────────────────────────────────────────────────── -->
+<main class="main-content" id="main-content">
+
+    <!-- Page: Intro -->
+    <div class="page active" id="page-intro">
+
+        <!-- Hero -->
+        <div class="hero">
+            <div class="hero-eyebrow">Research Project · Google Play · Q1 2026</div>
+            <h1 class="hero-title">What do users <em>really</em> think about Generative AI?</h1>
+            <p class="hero-desc">We analysed real user reviews across 5 leading GenAI apps — beyond star ratings alone — to surface what people love, complain about, and switch for.</p>
+            <div class="hero-stats">
+                <div class="hero-stat"><div class="hero-stat-val" id="hero-total">—</div><div class="hero-stat-label">Reviews Analysed</div></div>
+                <div class="hero-stat-div"></div>
+                <div class="hero-stat"><div class="hero-stat-val">5</div><div class="hero-stat-label">AI Products</div></div>
+                <div class="hero-stat-div"></div>
+                <div class="hero-stat"><div class="hero-stat-val">Weekly</div><div class="hero-stat-label">Data Updates</div></div>
+            </div>
+            <div class="hero-actions">
+                <button class="btn-primary" onclick="navigate('overview')">View Dashboard →</button>
+                <button class="btn-secondary" onclick="navigate('compare')">Compare Products</button>
+            </div>
+        </div>
+
+        <!-- Weekly Video -->
+        <div class="video-section">
+            <div class="video-eyebrow">📺 Weekly Update</div>
+            <div class="video-wrap">
+                <video id="weekly-video" controls muted loop playsinline
+                    style="width:100%;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.1);display:block">
+                    <source src="weekly_update.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="video-meta">
+                    <span class="video-badge">🔴 Latest</span>
+                    <span class="video-date" id="video-date"></span>
+                    <span class="video-desc">AI-generated weekly summary · Claude + ElevenLabs</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature 1 — Sentiment Analysis (text left, UI right) -->
+        <div class="feature-row">
+            <div class="feature-text">
+                <div class="feature-eyebrow">📊 Sentiment Analysis</div>
+                <h2 class="feature-title">Beyond star ratings — understand the emotion behind every review</h2>
+                <p class="feature-desc">Each review is scored from –1 (very negative) to +1 (very positive) using TextBlob NLP. Track how sentiment shifts week by week for each product.</p>
+                <ul class="feature-bullets">
+                    <li>Polarity scoring on 70,000+ reviews</li>
+                    <li>Daily sentiment trend lines per product</li>
+                    <li>Correlation with star ratings surfaced</li>
+                </ul>
+            </div>
+            <div class="feature-ui">
+                <div class="ui-mock">
+                    <div class="ui-mock-header">
+                        <div class="ui-mock-dot" style="background:#f43f5e"></div>
+                        <div class="ui-mock-dot" style="background:#f59f00"></div>
+                        <div class="ui-mock-dot" style="background:#22c55e"></div>
+                        <span style="font-size:11px;color:#9ca3af;margin-left:8px">Sentiment Over Time</span>
+                    </div>
+                    <div class="ui-mock-chart">
+                        <svg viewBox="0 0 280 100" xmlns="http://www.w3.org/2000/svg">
+                            <polyline points="0,60 40,50 80,45 120,55 160,40 200,35 240,38 280,30" fill="none" stroke="#10a37f" stroke-width="2.5" stroke-linecap="round"/>
+                            <polyline points="0,75 40,70 80,72 120,65 160,68 200,60 240,62 280,55" fill="none" stroke="#d97757" stroke-width="2.5" stroke-linecap="round"/>
+                            <polyline points="0,50 40,55 80,48 120,45 160,50 200,42 240,40 280,38" fill="none" stroke="#4285f4" stroke-width="2.5" stroke-linecap="round"/>
+                        </svg>
+                    </div>
+                    <div class="ui-mock-legend">
+                        <span class="ui-legend-item" style="color:#10a37f">● ChatGPT</span>
+                        <span class="ui-legend-item" style="color:#d97757">● Claude</span>
+                        <span class="ui-legend-item" style="color:#4285f4">● Gemini</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature 2 — Compare (UI left, text right) -->
+        <div class="feature-row reverse">
+            <div class="feature-text">
+                <div class="feature-eyebrow">⇄ Product Comparison</div>
+                <h2 class="feature-title">Compare any two products side by side — fairly</h2>
+                <p class="feature-desc">All products are sampled from equal review pools, so comparisons are statistically valid. See who wins on rating, sentiment, and user pain points.</p>
+                <ul class="feature-bullets">
+                    <li>Balanced 5,000-review samples per product</li>
+                    <li>Side-by-side KPI cards and charts</li>
+                    <li>Theme breakdown comparison</li>
+                </ul>
+            </div>
+            <div class="feature-ui">
+                <div class="ui-mock">
+                    <div class="ui-mock-header">
+                        <div class="ui-mock-dot" style="background:#f43f5e"></div>
+                        <div class="ui-mock-dot" style="background:#f59f00"></div>
+                        <div class="ui-mock-dot" style="background:#22c55e"></div>
+                        <span style="font-size:11px;color:#9ca3af;margin-left:8px">Compare Products</span>
+                    </div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px">
+                        <div style="background:#f0fdf4;border-radius:8px;padding:10px;border:1px solid #bbf7d0">
+                            <div style="font-size:10px;color:#15803d;font-weight:600;margin-bottom:4px">● ChatGPT</div>
+                            <div style="font-size:18px;font-weight:700;color:#111">4.43★</div>
+                            <div style="font-size:10px;color:#6b7280">Sentiment 0.479</div>
+                            <div style="margin-top:6px;display:flex;gap:4px">
+                                <span style="font-size:9px;background:#f0fdf4;color:#15803d;padding:2px 6px;border-radius:99px;border:1px solid #bbf7d0">5★ 75%</span>
+                                <span style="font-size:9px;background:#fff1f2;color:#be123c;padding:2px 6px;border-radius:99px;border:1px solid #fecdd3">1★ 8%</span>
+                            </div>
+                        </div>
+                        <div style="background:#fff7ed;border-radius:8px;padding:10px;border:1px solid #fed7aa">
+                            <div style="font-size:10px;color:#c2410c;font-weight:600;margin-bottom:4px">● Claude</div>
+                            <div style="font-size:18px;font-weight:700;color:#111">3.82★</div>
+                            <div style="font-size:10px;color:#6b7280">Sentiment 0.345</div>
+                            <div style="margin-top:6px;display:flex;gap:4px">
+                                <span style="font-size:9px;background:#f0fdf4;color:#15803d;padding:2px 6px;border-radius:99px;border:1px solid #bbf7d0">5★ 58%</span>
+                                <span style="font-size:9px;background:#fff1f2;color:#be123c;padding:2px 6px;border-radius:99px;border:1px solid #fecdd3">1★ 19%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="padding:0 12px 12px">
+                        <div style="background:#f8fafc;border-radius:6px;padding:8px;font-size:10px;color:#6b7280;border:1px solid #e5e7eb">
+                            ⚖ Both sampled from equal pools of 5,000 reviews
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature 3 — Word Cloud (text left, UI right) -->
+        <div class="feature-row">
+            <div class="feature-text">
+                <div class="feature-eyebrow">☁ Keyword Word Cloud</div>
+                <h2 class="feature-title">See the words users reach for — positive and negative</h2>
+                <p class="feature-desc">Top keywords extracted from thousands of reviews, sized by frequency. Switch between positive and negative clouds to understand what resonates and what frustrates.</p>
+                <ul class="feature-bullets">
+                    <li>Top 40 keywords per product</li>
+                    <li>Toggle positive vs negative</li>
+                    <li>Updates with every data refresh</li>
+                </ul>
+            </div>
+            <div class="feature-ui">
+                <div class="ui-mock">
+                    <div class="ui-mock-header">
+                        <div class="ui-mock-dot" style="background:#f43f5e"></div>
+                        <div class="ui-mock-dot" style="background:#f59f00"></div>
+                        <div class="ui-mock-dot" style="background:#22c55e"></div>
+                        <span style="font-size:11px;color:#9ca3af;margin-left:8px">Keyword Cloud — Positive</span>
+                    </div>
+                    <div style="padding:16px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center;min-height:100px">
+                        <span style="font-size:22px;font-weight:700;color:#2563eb;opacity:0.9">helpful</span>
+                        <span style="font-size:14px;font-weight:600;color:#0891b2">amazing</span>
+                        <span style="font-size:18px;font-weight:700;color:#7c3aed">love</span>
+                        <span style="font-size:11px;font-weight:600;color:#059669">useful</span>
+                        <span style="font-size:16px;font-weight:600;color:#2563eb">best</span>
+                        <span style="font-size:12px;font-weight:600;color:#0891b2">great</span>
+                        <span style="font-size:20px;font-weight:700;color:#059669">easy</span>
+                        <span style="font-size:11px;font-weight:600;color:#7c3aed">smart</span>
+                        <span style="font-size:13px;font-weight:600;color:#2563eb">fast</span>
+                        <span style="font-size:15px;font-weight:600;color:#059669">perfect</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature 4 — Weekly report (UI left, text right) -->
+        <div class="feature-row reverse">
+            <div class="feature-text">
+                <div class="feature-eyebrow">✉ Weekly Email Report</div>
+                <h2 class="feature-title">Get the weekly GenAI pulse delivered to your inbox</h2>
+                <p class="feature-desc">Every week, an AI-generated summary of the latest sentiment trends, product rankings, and user concerns — sent directly to your email.</p>
+                <ul class="feature-bullets">
+                    <li>Claude AI-generated insights</li>
+                    <li>Product rankings and sentiment scores</li>
+                    <li>Common user concerns highlighted</li>
+                </ul>
+                <!-- Subscribe form -->
+                <div class="subscribe-form" id="subscribe-form">
+                    <input type="email" id="subscribe-email" placeholder="your@email.com" />
+                    <button onclick="handleSubscribe()">Subscribe</button>
+                </div>
+                <div id="subscribe-msg" style="font-size:0.8rem;margin-top:0.5rem;display:none"></div>
+            </div>
+            <div class="feature-ui">
+                <div class="ui-mock" style="padding:0;overflow:hidden">
+                    <div style="background:#2563eb;padding:16px;text-align:center">
+                        <div style="font-size:14px;font-weight:700;color:white">GenAI Sentiment</div>
+                        <div style="font-size:10px;color:rgba(255,255,255,0.7)">Weekly Report · Apr 26, 2026</div>
+                    </div>
+                    <div style="padding:12px;border-bottom:1px solid #f0f0f0">
+                        <div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#2563eb;margin-bottom:6px">Executive Summary</div>
+                        <p style="font-size:10px;color:#374151;line-height:1.6;margin:0">ChatGPT leads with the highest sentiment score (0.479) and rating (4.43★). Users praise helpfulness but flag subscription friction across all apps...</p>
+                    </div>
+                    <div style="padding:12px">
+                        <div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#2563eb;margin-bottom:6px">Rankings</div>
+                        <div style="display:flex;flex-direction:column;gap:4px">
+                            <div style="display:flex;justify-content:space-between;font-size:10px;padding:4px 0;border-bottom:1px solid #f5f5f5"><span>● ChatGPT</span><span style="color:#15803d">4.43★</span></div>
+                            <div style="display:flex;justify-content:space-between;font-size:10px;padding:4px 0;border-bottom:1px solid #f5f5f5"><span>● Copilot</span><span style="color:#15803d">4.33★</span></div>
+                            <div style="display:flex;justify-content:space-between;font-size:10px;padding:4px 0"><span>● Gemini</span><span style="color:#15803d">4.32★</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Products covered -->
+        <div class="products-section">
+            <div class="products-section-title">Products Covered</div>
+            <div class="product-pills" id="intro-product-list"></div>
+        </div>
+
+    </div>
+
+    <!-- Page: Overview (All Products) -->
+    <div class="page" id="page-overview">
+        <div class="page-header">
+            <div class="page-eyebrow">All Products</div>
+            <h1 class="page-title">Overview</h1>
+            <p class="page-desc">Aggregated metrics and cross-product comparison</p>
+        </div>
+        <div class="insights-banner" id="overview-banner"></div>
+        <div class="kpi-grid" id="overview-kpis"></div>
+        <div class="charts-grid">
+            <div class="card span-2">
+                <div class="card-header"><span class="card-title">Sentiment Polarity Over Time</span></div>
+                <div class="chart-wrap"><canvas id="ov-timeSeriesChart"></canvas></div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Average Star Rating</span>
+                    <span class="badge-pill">⚖ Balanced 5k each</span>
+                </div>
+                <div class="chart-wrap"><canvas id="ov-barChart"></canvas></div>
+            </div>
+            <div class="card">
+                <div class="card-header"><span class="card-title">Review Theme Breakdown</span></div>
+                <div class="chart-wrap"><canvas id="ov-doughnutChart"></canvas></div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Rating Distribution</span>
+                    <span class="badge-pill">⚖ Balanced 5k each</span>
+                </div>
+                <div class="chart-wrap"><canvas id="ov-distChart"></canvas></div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <span class="card-title">Rating Polarization</span>
+                    <span class="badge-pill">Lower = more consistent</span>
+                </div>
+                <div class="chart-wrap"><canvas id="ov-polarChart"></canvas></div>
+            </div>
+            <div class="card span-2">
+                <div class="card-header">
+                    <span class="card-title">Keyword Word Cloud</span>
+                    <div class="tab-group">
+                        <button class="tab-btn active" id="ov-wc-pos" onclick="switchWC('overview','pos')">Positive</button>
+                        <button class="tab-btn" id="ov-wc-neg" onclick="switchWC('overview','neg')">Negative</button>
+                    </div>
+                </div>
+                <div class="wordcloud-wrap" id="ov-wordcloud"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page: Compare -->
+    <div class="page" id="page-compare">
+        <div class="page-header">
+            <div class="page-eyebrow">Side by Side</div>
+            <h1 class="page-title">Compare Products</h1>
+            <p class="page-desc">Select two products to compare directly</p>
+        </div>
+        <div class="compare-selectors card">
+            <div class="compare-sel-row">
+                <div class="sel-group">
+                    <label>Product A</label>
+                    <select id="cmp-app1"></select>
+                </div>
+                <div class="vs-divider">VS</div>
+                <div class="sel-group">
+                    <label>Product B</label>
+                    <select id="cmp-app2"></select>
+                </div>
+            </div>
+            <div class="compare-balance-note">⚖ Both products sampled from equal pools of <strong>5,000 reviews each</strong> — results are directly comparable.</div>
+        </div>
+        <div id="compare-panels"></div>
+        <div class="charts-grid" id="compare-charts" style="margin-top:1.5rem">
+            <div class="card span-2">
+                <div class="card-header"><span class="card-title">Sentiment Over Time — Comparison</span></div>
+                <div class="chart-wrap"><canvas id="cmp-timeChart"></canvas></div>
+            </div>
+            <div class="card">
+                <div class="card-header"><span class="card-title">Rating Distribution</span></div>
+                <div class="chart-wrap"><canvas id="cmp-distChart"></canvas></div>
+            </div>
+            <div class="card">
+                <div class="card-header"><span class="card-title">Theme Breakdown</span></div>
+                <div class="chart-wrap"><canvas id="cmp-themeChart"></canvas></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page: Individual Product (reused) -->
+    <div class="page" id="page-product">
+        <div class="page-header" id="product-header">
+            <div class="page-eyebrow">Product Detail</div>
+            <h1 class="page-title" id="product-title">ChatGPT</h1>
+            <p class="page-desc" id="product-desc"></p>
+        </div>
+        <div class="insights-banner" id="product-banner"></div>
+        <div class="kpi-grid" id="product-kpis"></div>
+        <div class="charts-grid">
+            <div class="card span-2">
+                <div class="card-header"><span class="card-title">Sentiment Polarity Over Time</span></div>
+                <div class="chart-wrap"><canvas id="pr-timeSeriesChart"></canvas></div>
+            </div>
+            <div class="card">
+                <div class="card-header"><span class="card-title">Average Star Rating</span></div>
+                <div class="chart-wrap"><canvas id="pr-barChart"></canvas></div>
+            </div>
+            <div class="card">
+                <div class="card-header"><span class="card-title">Review Theme Breakdown</span></div>
+                <div class="chart-wrap"><canvas id="pr-doughnutChart"></canvas></div>
+            </div>
+            <div class="card">
+                <div class="card-header"><span class="card-title">Rating Distribution</span></div>
+                <div class="chart-wrap"><canvas id="pr-distChart"></canvas></div>
+            </div>
+            <div class="card">
+                <div class="card-header"><span class="card-title">Rating Polarization</span></div>
+                <div class="chart-wrap"><canvas id="pr-polarChart"></canvas></div>
+            </div>
+            <div class="card span-2">
+                <div class="card-header">
+                    <span class="card-title">Keyword Word Cloud</span>
+                    <div class="tab-group">
+                        <button class="tab-btn active" id="pr-wc-pos" onclick="switchWC('product','pos')">Positive</button>
+                        <button class="tab-btn" id="pr-wc-neg" onclick="switchWC('product','neg')">Negative</button>
+                    </div>
+                </div>
+                <div class="wordcloud-wrap" id="pr-wordcloud"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page: Reviews -->
+    <div class="page" id="page-reviews">
+        <div class="page-header">
+            <div class="page-eyebrow">Explore</div>
+            <h1 class="page-title">Review Browser</h1>
+            <p class="page-desc">Search and browse real user reviews across all products</p>
+        </div>
+        <div class="card" style="margin-bottom:1.5rem">
+            <div class="reviews-controls">
+                <div class="search-wrap">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.5" stroke="currentColor" stroke-width="1.5"/><path d="M10.5 10.5l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                    <input type="text" id="search-input" placeholder="Search reviews by keyword…" />
+                </div>
+                <div class="reviews-filters">
+                    <select id="reviews-app-filter">
+                        <option value="All">All Products</option>
+                    </select>
+                    <div class="tab-group">
+                        <button class="tab-btn active" data-tab="neg">Most Negative</button>
+                        <button class="tab-btn" data-tab="pos">Most Positive</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="reviews-list" id="reviews-list"></div>
+    </div>
+
+</main>
+
+<script src="app.js"></script>
+</body>
+</html>
