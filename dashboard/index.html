@@ -84,47 +84,70 @@
         <div class="hero">
             <div class="hero-eyebrow">Research Project · Google Play · Q1 2026</div>
             <h1 class="hero-title">What do users <em>really</em> think about Generative AI?</h1>
-            <p class="hero-desc">We analysed real user reviews across 5 leading GenAI apps — beyond star ratings alone — to surface what people love, complain about, and switch for.</p>
+            <p class="hero-desc">Star ratings hide the truth. We mined 120,000+ real reviews across 5 leading AI apps to surface what people actually love, complain about, and switch for — refreshed automatically every week.</p>
             <div class="hero-stats">
                 <div class="hero-stat"><div class="hero-stat-val" id="hero-total">—</div><div class="hero-stat-label">Reviews Analysed</div></div>
                 <div class="hero-stat-div"></div>
                 <div class="hero-stat"><div class="hero-stat-val">5</div><div class="hero-stat-label">AI Products</div></div>
                 <div class="hero-stat-div"></div>
-                <div class="hero-stat"><div class="hero-stat-val">Weekly</div><div class="hero-stat-label">Data Updates</div></div>
+                <div class="hero-stat"><div class="hero-stat-val">Weekly</div><div class="hero-stat-label">Auto-Updated</div></div>
             </div>
             <div class="hero-actions">
-                <button class="btn-primary" onclick="navigate('overview')">View Dashboard →</button>
-                <button class="btn-secondary" onclick="navigate('compare')">Compare Products</button>
+                <button class="btn-primary" onclick="navigate('overview')">Explore the data →</button>
+                <button class="btn-secondary" onclick="navigate('compare')">Compare two products</button>
             </div>
         </div>
 
-        <!-- Weekly Video -->
-        <div class="video-section">
-            <div class="video-eyebrow">📺 Weekly Update</div>
-            <div class="video-wrap">
-                <video id="weekly-video" controls muted loop playsinline
-                    style="width:100%;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.1);display:block">
-                    <source src="weekly_update.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-                <div class="video-meta">
-                    <span class="video-badge">🔴 Latest</span>
-                    <span class="video-date" id="video-date"></span>
-                    <span class="video-desc">AI-generated weekly summary · Claude + ElevenLabs</span>
+        <!-- Subscribe (moved to top — primary call to action) -->
+        <div class="feature-row reverse">
+            <div class="feature-text">
+                <div class="feature-eyebrow">✉ Weekly Email Report</div>
+                <h2 class="feature-title">One email a week. The whole GenAI mood, summarised.</h2>
+                <p class="feature-desc">Skip the dashboard if you like — get an AI-written digest of the week's biggest shifts: who's rising, who's slipping, and what users are newly upset about.</p>
+                <ul class="feature-bullets">
+                    <li>The week's winners, losers, and biggest movers</li>
+                    <li>Emerging complaints before they trend</li>
+                    <li>Written by Claude, grounded in real review data</li>
+                </ul>
+                <!-- Subscribe form -->
+                <div class="subscribe-form" id="subscribe-form">
+                    <input type="email" id="subscribe-email" placeholder="your@email.com" />
+                    <button onclick="handleSubscribe()">Subscribe</button>
+                </div>
+                <div id="subscribe-msg" style="font-size:0.8rem;margin-top:0.5rem;display:none"></div>
+            </div>
+            <div class="feature-ui">
+                <div class="ui-mock" style="padding:0;overflow:hidden">
+                    <div style="background:#2563eb;padding:16px;text-align:center">
+                        <div style="font-size:14px;font-weight:700;color:white">GenAI Sentiment</div>
+                        <div style="font-size:10px;color:rgba(255,255,255,0.7)">Weekly Report · Latest</div>
+                    </div>
+                    <div style="padding:12px;border-bottom:1px solid #f0f0f0">
+                        <div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#2563eb;margin-bottom:6px">Executive Summary</div>
+                        <p style="font-size:10px;color:#374151;line-height:1.6;margin:0">ChatGPT leads on satisfaction and dominates student use, while Claude draws a passionate but divided developer base over its usage limits...</p>
+                    </div>
+                    <div style="padding:12px">
+                        <div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#2563eb;margin-bottom:6px">Rankings</div>
+                        <div style="display:flex;flex-direction:column;gap:4px">
+                            <div style="display:flex;justify-content:space-between;font-size:10px;padding:4px 0;border-bottom:1px solid #f5f5f5"><span>● ChatGPT</span><span style="color:#15803d">4.43★</span></div>
+                            <div style="display:flex;justify-content:space-between;font-size:10px;padding:4px 0;border-bottom:1px solid #f5f5f5"><span>● Copilot</span><span style="color:#15803d">4.33★</span></div>
+                            <div style="display:flex;justify-content:space-between;font-size:10px;padding:4px 0"><span>● Gemini</span><span style="color:#15803d">4.32★</span></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Feature 1 — Sentiment Analysis (text left, UI right) -->
+        <!-- Feature 1 — Sentiment -->
         <div class="feature-row">
             <div class="feature-text">
-                <div class="feature-eyebrow">📊 Sentiment Analysis</div>
-                <h2 class="feature-title">Beyond star ratings — understand the emotion behind every review</h2>
-                <p class="feature-desc">Each review is scored from –1 (very negative) to +1 (very positive) using TextBlob NLP. Track how sentiment shifts week by week for each product.</p>
+                <div class="feature-eyebrow">📊 Sentiment Over Time</div>
+                <h2 class="feature-title">A 4.5-star app can still be losing people</h2>
+                <p class="feature-desc">Ratings are a lagging, blunt signal. We track the emotional tone of reviews day by day, so you can see a product's reputation turning weeks before the star average moves.</p>
                 <ul class="feature-bullets">
-                    <li>Polarity scoring on 70,000+ reviews</li>
-                    <li>Daily sentiment trend lines per product</li>
-                    <li>Correlation with star ratings surfaced</li>
+                    <li>Daily sentiment trend for every product</li>
+                    <li>Spot momentum shifts the star rating hides</li>
+                    <li>See where sentiment and stars disagree</li>
                 </ul>
             </div>
             <div class="feature-ui">
@@ -151,16 +174,16 @@
             </div>
         </div>
 
-        <!-- Feature 2 — Compare (UI left, text right) -->
+        <!-- Feature 2 — Compare -->
         <div class="feature-row reverse">
             <div class="feature-text">
-                <div class="feature-eyebrow">⇄ Product Comparison</div>
-                <h2 class="feature-title">Compare any two products side by side — fairly</h2>
-                <p class="feature-desc">All products are sampled from equal review pools, so comparisons are statistically valid. See who wins on rating, sentiment, and user pain points.</p>
+                <div class="feature-eyebrow">⇄ Head-to-Head</div>
+                <h2 class="feature-title">ChatGPT or Claude? Settle it with evidence.</h2>
+                <p class="feature-desc">Pick any two products and get a fair, like-for-like verdict — backed by equal-sized review samples and an AI-written summary of who wins, who loses, and for whom.</p>
                 <ul class="feature-bullets">
-                    <li>Balanced 5,000-review samples per product</li>
-                    <li>Side-by-side KPI cards and charts</li>
-                    <li>Theme breakdown comparison</li>
+                    <li>Apples-to-apples: equal review samples per product</li>
+                    <li>Ratings, sentiment, and pain points side by side</li>
+                    <li>A plain-English "which should you pick" verdict</li>
                 </ul>
             </div>
             <div class="feature-ui">
@@ -169,47 +192,38 @@
                         <div class="ui-mock-dot" style="background:#f43f5e"></div>
                         <div class="ui-mock-dot" style="background:#f59f00"></div>
                         <div class="ui-mock-dot" style="background:#22c55e"></div>
-                        <span style="font-size:11px;color:#9ca3af;margin-left:8px">Compare Products</span>
+                        <span style="font-size:11px;color:#9ca3af;margin-left:8px">ChatGPT vs Claude</span>
                     </div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px">
-                        <div style="background:#f0fdf4;border-radius:8px;padding:10px;border:1px solid #bbf7d0">
-                            <div style="font-size:10px;color:#15803d;font-weight:600;margin-bottom:4px">● ChatGPT</div>
-                            <div style="font-size:18px;font-weight:700;color:#111">4.43★</div>
-                            <div style="font-size:10px;color:#6b7280">Sentiment 0.479</div>
-                            <div style="margin-top:6px;display:flex;gap:4px">
-                                <span style="font-size:9px;background:#f0fdf4;color:#15803d;padding:2px 6px;border-radius:99px;border:1px solid #bbf7d0">5★ 75%</span>
-                                <span style="font-size:9px;background:#fff1f2;color:#be123c;padding:2px 6px;border-radius:99px;border:1px solid #fecdd3">1★ 8%</span>
-                            </div>
+                    <div style="padding:14px;display:flex;gap:10px">
+                        <div style="flex:1;text-align:center;padding:10px;background:#f8fafc;border-radius:8px;border:1px solid #e5e7eb">
+                            <div style="font-size:11px;font-weight:600;color:#10a37f">ChatGPT</div>
+                            <div style="font-size:20px;font-weight:700;color:#111">4.43★</div>
+                            <div style="font-size:9px;color:#15803d">76% five-star</div>
                         </div>
-                        <div style="background:#fff7ed;border-radius:8px;padding:10px;border:1px solid #fed7aa">
-                            <div style="font-size:10px;color:#c2410c;font-weight:600;margin-bottom:4px">● Claude</div>
-                            <div style="font-size:18px;font-weight:700;color:#111">3.82★</div>
-                            <div style="font-size:10px;color:#6b7280">Sentiment 0.345</div>
-                            <div style="margin-top:6px;display:flex;gap:4px">
-                                <span style="font-size:9px;background:#f0fdf4;color:#15803d;padding:2px 6px;border-radius:99px;border:1px solid #bbf7d0">5★ 58%</span>
-                                <span style="font-size:9px;background:#fff1f2;color:#be123c;padding:2px 6px;border-radius:99px;border:1px solid #fecdd3">1★ 19%</span>
-                            </div>
+                        <div style="display:flex;align-items:center;font-size:11px;color:#9ca3af;font-weight:600">VS</div>
+                        <div style="flex:1;text-align:center;padding:10px;background:#f8fafc;border-radius:8px;border:1px solid #e5e7eb">
+                            <div style="font-size:11px;font-weight:600;color:#d97757">Claude</div>
+                            <div style="font-size:20px;font-weight:700;color:#111">3.87★</div>
+                            <div style="font-size:9px;color:#be123c">19% one-star</div>
                         </div>
                     </div>
-                    <div style="padding:0 12px 12px">
-                        <div style="background:#f8fafc;border-radius:6px;padding:8px;font-size:10px;color:#6b7280;border:1px solid #e5e7eb">
-                            ⚖ Both sampled from equal pools of 5,000 reviews
-                        </div>
+                    <div style="padding:0 14px 14px">
+                        <div style="background:#eff6ff;border-radius:6px;padding:8px;font-size:9px;color:#1e40af;line-height:1.5">✨ ChatGPT wins for everyday and student use; Claude is the pick for developers who can tolerate its message caps.</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Feature 3 — Word Cloud (text left, UI right) -->
+        <!-- Feature 3 — Keyword Word Cloud -->
         <div class="feature-row">
             <div class="feature-text">
-                <div class="feature-eyebrow">☁ Keyword Word Cloud</div>
-                <h2 class="feature-title">See the words users reach for — positive and negative</h2>
-                <p class="feature-desc">Top keywords extracted from thousands of reviews, sized by frequency. Switch between positive and negative clouds to understand what resonates and what frustrates.</p>
+                <div class="feature-eyebrow">☁ Distinctive Keywords</div>
+                <h2 class="feature-title">Not "great" and "love" — what each app is <em>actually</em> known for</h2>
+                <p class="feature-desc">Generic praise tells you nothing. We surface the words that set each product apart from its rivals — so Gemini's strengths read "image, video, assistant," not the same five words every app gets.</p>
                 <ul class="feature-bullets">
-                    <li>Top 40 keywords per product</li>
-                    <li>Toggle positive vs negative</li>
-                    <li>Updates with every data refresh</li>
+                    <li>Distinctive terms, not generic sentiment</li>
+                    <li>Separate clouds for what users praise vs criticise</li>
+                    <li>Instantly reveals each product's real identity</li>
                 </ul>
             </div>
             <div class="feature-ui">
@@ -218,60 +232,37 @@
                         <div class="ui-mock-dot" style="background:#f43f5e"></div>
                         <div class="ui-mock-dot" style="background:#f59f00"></div>
                         <div class="ui-mock-dot" style="background:#22c55e"></div>
-                        <span style="font-size:11px;color:#9ca3af;margin-left:8px">Keyword Cloud — Positive</span>
+                        <span style="font-size:11px;color:#9ca3af;margin-left:8px">Gemini — what stands out</span>
                     </div>
                     <div style="padding:16px;display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center;min-height:100px">
-                        <span style="font-size:22px;font-weight:700;color:#2563eb;opacity:0.9">helpful</span>
-                        <span style="font-size:14px;font-weight:600;color:#0891b2">amazing</span>
-                        <span style="font-size:18px;font-weight:700;color:#7c3aed">love</span>
-                        <span style="font-size:11px;font-weight:600;color:#059669">useful</span>
-                        <span style="font-size:16px;font-weight:600;color:#2563eb">best</span>
-                        <span style="font-size:12px;font-weight:600;color:#0891b2">great</span>
-                        <span style="font-size:20px;font-weight:700;color:#059669">easy</span>
-                        <span style="font-size:11px;font-weight:600;color:#7c3aed">smart</span>
-                        <span style="font-size:13px;font-weight:600;color:#2563eb">fast</span>
-                        <span style="font-size:15px;font-weight:600;color:#059669">perfect</span>
+                        <span style="font-size:24px;font-weight:700;color:#2563eb;opacity:0.9">image</span>
+                        <span style="font-size:18px;font-weight:700;color:#7c3aed">assistant</span>
+                        <span style="font-size:20px;font-weight:700;color:#059669">video</span>
+                        <span style="font-size:13px;font-weight:600;color:#0891b2">android</span>
+                        <span style="font-size:16px;font-weight:600;color:#2563eb">live</span>
+                        <span style="font-size:12px;font-weight:600;color:#7c3aed">voice</span>
+                        <span style="font-size:15px;font-weight:600;color:#059669">phone</span>
+                        <span style="font-size:11px;font-weight:600;color:#0891b2">siri</span>
+                        <span style="font-size:14px;font-weight:600;color:#2563eb">screen</span>
+                        <span style="font-size:12px;font-weight:600;color:#059669">music</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Feature 4 — Weekly report (UI left, text right) -->
-        <div class="feature-row reverse">
-            <div class="feature-text">
-                <div class="feature-eyebrow">✉ Weekly Email Report</div>
-                <h2 class="feature-title">Get the weekly GenAI pulse delivered to your inbox</h2>
-                <p class="feature-desc">Every week, an AI-generated summary of the latest sentiment trends, product rankings, and user concerns — sent directly to your email.</p>
-                <ul class="feature-bullets">
-                    <li>Claude AI-generated insights</li>
-                    <li>Product rankings and sentiment scores</li>
-                    <li>Common user concerns highlighted</li>
-                </ul>
-                <!-- Subscribe form -->
-                <div class="subscribe-form" id="subscribe-form">
-                    <input type="email" id="subscribe-email" placeholder="your@email.com" />
-                    <button onclick="handleSubscribe()">Subscribe</button>
-                </div>
-                <div id="subscribe-msg" style="font-size:0.8rem;margin-top:0.5rem;display:none"></div>
-            </div>
-            <div class="feature-ui">
-                <div class="ui-mock" style="padding:0;overflow:hidden">
-                    <div style="background:#2563eb;padding:16px;text-align:center">
-                        <div style="font-size:14px;font-weight:700;color:white">GenAI Sentiment</div>
-                        <div style="font-size:10px;color:rgba(255,255,255,0.7)">Weekly Report · Apr 26, 2026</div>
-                    </div>
-                    <div style="padding:12px;border-bottom:1px solid #f0f0f0">
-                        <div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#2563eb;margin-bottom:6px">Executive Summary</div>
-                        <p style="font-size:10px;color:#374151;line-height:1.6;margin:0">ChatGPT leads with the highest sentiment score (0.479) and rating (4.43★). Users praise helpfulness but flag subscription friction across all apps...</p>
-                    </div>
-                    <div style="padding:12px">
-                        <div style="font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:#2563eb;margin-bottom:6px">Rankings</div>
-                        <div style="display:flex;flex-direction:column;gap:4px">
-                            <div style="display:flex;justify-content:space-between;font-size:10px;padding:4px 0;border-bottom:1px solid #f5f5f5"><span>● ChatGPT</span><span style="color:#15803d">4.43★</span></div>
-                            <div style="display:flex;justify-content:space-between;font-size:10px;padding:4px 0;border-bottom:1px solid #f5f5f5"><span>● Copilot</span><span style="color:#15803d">4.33★</span></div>
-                            <div style="display:flex;justify-content:space-between;font-size:10px;padding:4px 0"><span>● Gemini</span><span style="color:#15803d">4.32★</span></div>
-                        </div>
-                    </div>
+        <!-- Weekly Video (moved to bottom — supporting showcase) -->
+        <div class="video-section">
+            <div class="video-eyebrow">📺 Weekly Video Recap</div>
+            <div class="video-wrap">
+                <video id="weekly-video" controls muted loop playsinline
+                    style="width:100%;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.1);display:block">
+                    <source src="weekly_update.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="video-meta">
+                    <span class="video-badge">🔴 Latest</span>
+                    <span class="video-date" id="video-date"></span>
+                    <span class="video-desc">Auto-generated each week · Claude + ElevenLabs</span>
                 </div>
             </div>
         </div>
@@ -283,8 +274,6 @@
         </div>
 
     </div>
-
-    <!-- Page: Overview (All Products) -->
     <div class="page" id="page-overview">
         <div class="page-header">
             <div class="page-eyebrow">All Products</div>
@@ -292,7 +281,6 @@
             <p class="page-desc">Aggregated metrics and cross-product comparison</p>
         </div>
         <div class="insights-banner" id="overview-banner"></div>
-        <div class="card ai-analysis-card" id="overview-analysis"></div>
         <div class="kpi-grid" id="overview-kpis"></div>
         <div class="charts-grid">
             <div class="card span-2">
@@ -359,14 +347,6 @@
             <div class="compare-balance-note">⚖ Both products sampled from equal pools of <strong>5,000 reviews each</strong> — results are directly comparable.</div>
         </div>
         <div id="compare-panels"></div>
-        <div class="card ai-analysis-card" id="compare-analysis">
-            <div class="ai-analysis-head">
-                <span class="ai-analysis-title">✨ AI Comparison</span>
-            </div>
-            <div class="ai-analysis-body" id="compare-analysis-body">
-                <p class="ai-analysis-hint">Pick two products above to see an AI-written head-to-head.</p>
-            </div>
-        </div>
         <div class="charts-grid" id="compare-charts" style="margin-top:1.5rem">
             <div class="card span-2">
                 <div class="card-header"><span class="card-title">Sentiment Over Time — Comparison</span></div>
@@ -391,7 +371,6 @@
             <p class="page-desc" id="product-desc"></p>
         </div>
         <div class="insights-banner" id="product-banner"></div>
-        <div class="card ai-analysis-card" id="product-analysis"></div>
         <div class="kpi-grid" id="product-kpis"></div>
         <div class="charts-grid">
             <div class="card span-2">
@@ -399,11 +378,11 @@
                 <div class="chart-wrap"><canvas id="pr-timeSeriesChart"></canvas></div>
             </div>
             <div class="card">
-                <div class="card-header"><span class="card-title">vs. All-Product Average</span></div>
+                <div class="card-header"><span class="card-title">Average Star Rating</span></div>
                 <div class="chart-wrap"><canvas id="pr-barChart"></canvas></div>
             </div>
             <div class="card">
-                <div class="card-header"><span class="card-title">Complaint Themes (1–2★ reviews)</span></div>
+                <div class="card-header"><span class="card-title">Review Theme Breakdown</span></div>
                 <div class="chart-wrap"><canvas id="pr-doughnutChart"></canvas></div>
             </div>
             <div class="card">
