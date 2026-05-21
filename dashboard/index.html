@@ -292,6 +292,7 @@
             <p class="page-desc">Aggregated metrics and cross-product comparison</p>
         </div>
         <div class="insights-banner" id="overview-banner"></div>
+        <div class="card ai-analysis-card" id="overview-analysis"></div>
         <div class="kpi-grid" id="overview-kpis"></div>
         <div class="charts-grid">
             <div class="card span-2">
@@ -358,6 +359,15 @@
             <div class="compare-balance-note">⚖ Both products sampled from equal pools of <strong>5,000 reviews each</strong> — results are directly comparable.</div>
         </div>
         <div id="compare-panels"></div>
+        <div class="card ai-analysis-card" id="compare-analysis">
+            <div class="ai-analysis-head">
+                <span class="ai-analysis-title">✨ AI Comparison</span>
+                <button class="ai-gen-btn" id="cmp-generate-btn" onclick="generateCompareAnalysis()">Generate comparison</button>
+            </div>
+            <div class="ai-analysis-body" id="compare-analysis-body">
+                <p class="ai-analysis-hint">Pick two products above, then generate an AI-written head-to-head analysis.</p>
+            </div>
+        </div>
         <div class="charts-grid" id="compare-charts" style="margin-top:1.5rem">
             <div class="card span-2">
                 <div class="card-header"><span class="card-title">Sentiment Over Time — Comparison</span></div>
@@ -382,6 +392,7 @@
             <p class="page-desc" id="product-desc"></p>
         </div>
         <div class="insights-banner" id="product-banner"></div>
+        <div class="card ai-analysis-card" id="product-analysis"></div>
         <div class="kpi-grid" id="product-kpis"></div>
         <div class="charts-grid">
             <div class="card span-2">
@@ -389,11 +400,11 @@
                 <div class="chart-wrap"><canvas id="pr-timeSeriesChart"></canvas></div>
             </div>
             <div class="card">
-                <div class="card-header"><span class="card-title">Average Star Rating</span></div>
+                <div class="card-header"><span class="card-title">vs. All-Product Average</span></div>
                 <div class="chart-wrap"><canvas id="pr-barChart"></canvas></div>
             </div>
             <div class="card">
-                <div class="card-header"><span class="card-title">Review Theme Breakdown</span></div>
+                <div class="card-header"><span class="card-title">Complaint Themes (1–2★ reviews)</span></div>
                 <div class="chart-wrap"><canvas id="pr-doughnutChart"></canvas></div>
             </div>
             <div class="card">

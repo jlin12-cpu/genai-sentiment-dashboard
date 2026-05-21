@@ -1,45 +1,39 @@
 name: Weekly GenAI Data Update
-
 on:
   schedule:
     - cron: '0 8 * * 1'  # Every Monday at 8am UTC
   workflow_dispatch:      # Allow manual trigger from GitHub UI
-
 jobs:
   update:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
-
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
       - name: Install system fonts
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y fonts-liberation fonts-dejavu
-
       - name: Install dependencies
         run: |
           pip install pandas google-play-scraper textblob python-dotenv \
                       anthropic elevenlabs pillow moviepy==1.0.3 \
-                      gspread google-auth
-
+                      gspread google-auth wordfreq
       - name: Run scraper
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: python scraper/scraper.py
-
       - name: Run clean_data
         run: python scraper/clean_data.py
-
       - name: Run build_dashboard_data
         run: python dashboard/build_dashboard_data.py
-
+      - name: Generate AI insights
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python generate_insights.py
       - name: Generate weekly video
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -47,7 +41,6 @@ jobs:
         run: |
           echo "Key starts with: ${ANTHROPIC_API_KEY:0:15}"
           python generate_video_v4.py
-
       - name: Commit and push updated data + video
         run: |
           git config --global user.name "github-actions[bot]"
@@ -57,11 +50,9 @@ jobs:
           git diff --staged --quiet || git commit -m "Weekly update $(date +'%Y-%m-%d')"
           git pull --rebase origin main
           git push
-
       - name: Restore Google credentials
         run: |
           echo "${{ secrets.GOOGLE_CREDENTIALS }}" | base64 -d > credentials.json
-
       - name: Send weekly email report
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}

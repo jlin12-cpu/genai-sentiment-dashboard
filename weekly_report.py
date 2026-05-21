@@ -34,7 +34,7 @@ def build_context(data):
 
 def ask_claude(prompt):
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
-    msg = client.messages.create(model="claude-sonnet-4-20250514", max_tokens=800,
+    msg = client.messages.create(model="claude-sonnet-4-6", max_tokens=800,
         messages=[{"role": "user", "content": prompt}])
     return msg.content[0].text
 

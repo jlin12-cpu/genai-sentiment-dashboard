@@ -6,6 +6,11 @@ let currentProduct = null;
 let wcModes = { overview: 'pos', product: 'pos' };
 let activeReviewTab = 'neg';
 
+// AI analysis: backend proxy (server.py) for live Compare-page generation.
+const COMPARE_API = 'http://localhost:5001/api/compare';
+// Cache compare results per product-pair so re-viewing the same pair is free.
+const compareCache = {};
+
 const APP_COLORS = {
     'ChatGPT':           '#10a37f',
     'Microsoft_Copilot': '#0078d4',
@@ -110,8 +115,10 @@ function renderIntro() {
     }
 }
 
-// ── Subscribe (Formspree) ─────────────────────────────────────────────────────
-function handleSubscribe() {
+// ── Subscribe (backend → Google Sheets, the same list the weekly mailer reads) ─
+const SUBSCRIBE_API = 'http://localhost:5001/api/subscribe';
+
+async function handleSubscribe() {
     const input = document.getElementById('subscribe-email');
     const msg   = document.getElementById('subscribe-msg');
     const email = input.value.trim();
@@ -125,33 +132,34 @@ function handleSubscribe() {
 
     msg.style.display = 'block';
     msg.style.color   = '#6b7280';
-    msg.textContent   = 'Submitting...';
+    msg.textContent   = 'Submitting…';
 
-    fetch('https://formspree.io/f/xzdyqgyg', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
-    })
-    .then(res => {
+    try {
+        const res = await fetch(SUBSCRIBE_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email })
+        });
+        const data = await res.json();
         if (res.ok) {
             msg.style.color = '#15803d';
-            msg.textContent = `✓ Thanks! You'll receive weekly reports.`;
+            msg.textContent = `✓ ${data.message || "Subscribed!"}`;
             input.value = '';
         } else {
             msg.style.color = '#dc2626';
-            msg.textContent = 'Something went wrong. Please try again.';
+            msg.textContent = data.error || 'Something went wrong. Please try again.';
         }
-    })
-    .catch(() => {
+    } catch (e) {
         msg.style.color = '#dc2626';
-        msg.textContent = 'Network error. Please try again.';
-    });
+        msg.textContent = 'Could not reach the server. Is the backend running? (python server.py)';
+    }
 }
 
 // ── Overview Page ─────────────────────────────────────────────────────────────
 function renderOverview() {
     if (!dashboardData) return;
     renderBanner('overview', 'All');
+    renderAnalysis('overview-analysis', dashboardData.analysis && dashboardData.analysis.overview);
     renderKPIBlock('overview-kpis', 'All');
     renderTimeSeriesChart('ov-timeSeriesChart', 'All');
     renderBarChart('ov-barChart', 'All');
@@ -170,6 +178,9 @@ function renderProduct(app) {
         `${item.Total_Reviews.toLocaleString()} reviews · Avg ${item.Avg_Star.toFixed(2)}★ · Sentiment ${item.Avg_Sentiment.toFixed(3)}`;
     document.getElementById('page-product').style.setProperty('--product-color', color);
     renderBanner('product', app);
+    const productAnalysis = dashboardData.analysis && dashboardData.analysis.products
+        ? dashboardData.analysis.products[app] : null;
+    renderAnalysis('product-analysis', productAnalysis);
     renderKPIBlock('product-kpis', app);
     renderTimeSeriesChart('pr-timeSeriesChart', app);
     renderBarChart('pr-barChart', app);
@@ -193,12 +204,89 @@ function switchWC(context, mode) {
     renderWordCloud(container, app, mode);
 }
 
+// ── AI Analysis (offline: overview + product pages) ───────────────────────────
+function renderAnalysis(containerId, text) {
+    const el = document.getElementById(containerId);
+    if (!el) return;
+    if (!text) {
+        // No analysis in JSON yet (generate_insights.py not run) — hide the card.
+        el.style.display = 'none';
+        return;
+    }
+    el.style.display = '';
+    const meta = dashboardData.analysis && dashboardData.analysis.generated_at
+        ? `<div class="ai-analysis-meta">Generated ${new Date(dashboardData.analysis.generated_at).toLocaleDateString()}</div>`
+        : '';
+    el.innerHTML =
+        `<div class="ai-analysis-label">✨ AI Analysis</div>
+         <p class="ai-analysis-text">${escapeHTML(text)}</p>${meta}`;
+}
+
+function escapeHTML(s) {
+    return String(s).replace(/[&<>"']/g, c =>
+        ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+}
+
+// ── AI Comparison (live: Compare page, via server.py backend) ─────────────────
+function compareCacheKey(a, b) {
+    return [a, b].sort().join('::');   // A vs B and B vs A share one cache entry
+}
+
+async function generateCompareAnalysis() {
+    const app1 = document.getElementById('cmp-app1').value;
+    const app2 = document.getElementById('cmp-app2').value;
+    const body = document.getElementById('compare-analysis-body');
+    const btn  = document.getElementById('cmp-generate-btn');
+
+    if (!app1 || !app2 || app1 === app2) {
+        body.innerHTML = `<p class="ai-analysis-error">Pick two different products first.</p>`;
+        return;
+    }
+
+    const key = compareCacheKey(app1, app2);
+    if (compareCache[key]) {
+        body.innerHTML = `<p class="ai-analysis-text">${escapeHTML(compareCache[key])}</p>`;
+        return;
+    }
+
+    btn.disabled = true;
+    body.innerHTML = `<span class="ai-loading">Analysing&nbsp;</span>`;
+    try {
+        const res = await fetch(COMPARE_API, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ apps: [app1, app2] })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
+        compareCache[key] = data.analysis;
+        body.innerHTML = `<p class="ai-analysis-text">${escapeHTML(data.analysis)}</p>`;
+    } catch (e) {
+        const hint = e.message.includes('Failed to fetch')
+            ? 'Is the backend running? Start it with: python server.py'
+            : e.message;
+        body.innerHTML = `<p class="ai-analysis-error">⚠ ${escapeHTML(hint)}</p>`;
+    } finally {
+        btn.disabled = false;
+    }
+}
+
 // ── Compare Page ──────────────────────────────────────────────────────────────
 function renderCompare() {
     if (!dashboardData) return;
     const app1 = document.getElementById('cmp-app1').value;
     const app2 = document.getElementById('cmp-app2').value;
     if (!app1 || !app2 || app1 === app2) return;
+
+    // Reset the AI comparison area for this pair: show cached result if we have
+    // one, otherwise prompt the user to generate.
+    const cmpBody = document.getElementById('compare-analysis-body');
+    if (cmpBody) {
+        const cached = compareCache[compareCacheKey(app1, app2)];
+        cmpBody.innerHTML = cached
+            ? `<p class="ai-analysis-text">${escapeHTML(cached)}</p>`
+            : `<p class="ai-analysis-hint">Generate an AI head-to-head for ${app1.replace('_',' ')} vs ${app2.replace('_',' ')}.</p>`;
+    }
     const panels = document.getElementById('compare-panels');
     panels.innerHTML = [app1, app2].map(app => {
         const item = getOverview(app);
@@ -392,22 +480,65 @@ function renderTimeSeriesChart(canvasId, app) {
 function renderBarChart(canvasId, app) {
     destroyChart(canvasId);
     const ov=dashboardData.overview;
-    const items=app==='All'?ov:ov.filter(i=>i.App===app);
+    if(app==='All'){
+        // Cross-product: one bar per product (meaningful comparison).
+        charts[canvasId]=new Chart(document.getElementById(canvasId).getContext('2d'),{
+            type:'bar',
+            data:{labels:ov.map(i=>i.App.replace('_',' ')),datasets:[{label:'Avg Star',data:ov.map(i=>i.Avg_Star),backgroundColor:ov.map(i=>APP_COLORS[i.App]+'cc'),borderRadius:6,borderSkipped:false}]},
+            options:{...barOptions(),scales:{x:{grid:{display:false}},y:{min:0,max:5,grid:{color:'rgba(0,0,0,0.04)'}}}}
+        });
+        return;
+    }
+    // Single product: a lone bar is meaningless, so compare THIS product against
+    // the all-products average across three normalised metrics.
+    const it=getOverview(app);
+    const n=ov.length;
+    const avgStar=ov.reduce((s,i)=>s+i.Avg_Star,0)/n;
+    const avgSent=ov.reduce((s,i)=>s+i.Avg_Sentiment,0)/n;
+    const avgStd =ov.reduce((s,i)=>s+i.Std_Dev,0)/n;
+    // Normalise to 0-1 so they share an axis: star/5, sentiment shifted to 0-1, std/3.
+    const norm=(v,kind)=> kind==='star'?v/5 : kind==='sent'?(v+1)/2 : v/3;
+    const labels=['Avg Star','Sentiment','Polarisation'];
+    const thisData=[norm(it.Avg_Star,'star'),norm(it.Avg_Sentiment,'sent'),norm(it.Std_Dev,'std')];
+    const avgData =[norm(avgStar,'star'),norm(avgSent,'sent'),norm(avgStd,'std')];
+    const color=APP_COLORS[app]||'#3b82f6';
     charts[canvasId]=new Chart(document.getElementById(canvasId).getContext('2d'),{
         type:'bar',
-        data:{labels:items.map(i=>i.App.replace('_',' ')),datasets:[{label:'Avg Star',data:items.map(i=>i.Avg_Star),backgroundColor:items.map(i=>APP_COLORS[i.App]+'cc'),borderRadius:6,borderSkipped:false}]},
-        options:{...barOptions(),scales:{x:{grid:{display:false}},y:{min:0,max:5,grid:{color:'rgba(0,0,0,0.04)'}}}}
+        data:{labels,datasets:[
+            {label:app.replace('_',' '),data:thisData,backgroundColor:color+'cc',borderRadius:6,borderSkipped:false},
+            {label:'All-product avg',data:avgData,backgroundColor:'#cbd5e1cc',borderRadius:6,borderSkipped:false}
+        ]},
+        options:{...barOptions(),plugins:{...barOptions().plugins,
+            tooltip:{callbacks:{label:(ctx)=>{
+                // Show the real (un-normalised) value in the tooltip.
+                const i=ctx.dataIndex; const isThis=ctx.datasetIndex===0;
+                const real=[ isThis?it.Avg_Star:avgStar, isThis?it.Avg_Sentiment:avgSent, isThis?it.Std_Dev:avgStd ][i];
+                return `${ctx.dataset.label}: ${real.toFixed(2)}`;
+            }}}},
+            scales:{x:{grid:{display:false}},y:{min:0,max:1,ticks:{display:false},grid:{color:'rgba(0,0,0,0.04)'}}}}
     });
 }
 
 function renderDoughnutChart(canvasId, app) {
     destroyChart(canvasId);
     let totals={};
-    if(app==='All'){dashboardData.overview.forEach(i=>Object.entries(i.Theme_Counts).forEach(([k,v])=>{totals[k]=(totals[k]||0)+v;}));}
-    else{totals=getOverview(app).Theme_Counts;}
+    if(app==='All'){
+        // Cross-product view: full theme mix (General included, normal colour).
+        dashboardData.overview.forEach(i=>Object.entries(i.Theme_Counts).forEach(([k,v])=>{totals[k]=(totals[k]||0)+v;}));
+    } else {
+        // Single product: themes from LOW-STAR reviews only (real complaints),
+        // which shrinks the General bucket and surfaces actual pain points.
+        const it=getOverview(app);
+        totals = it.Theme_Counts_Neg || it.Theme_Counts;
+    }
+    const labels=Object.keys(totals);
+    // Grey-out 'General' (uncategorised) so the eye goes to the specific themes,
+    // without hiding it / distorting the real distribution.
+    const themePalette={'General':'#d1d5db','Pricing/Subscription':'#10b981','Bugs/Performance':'#f59f00','Accuracy/Logic Issues':'#f43f5e'};
+    const colors=labels.map((k,idx)=>themePalette[k]||THEME_COLORS[idx%THEME_COLORS.length]);
     charts[canvasId]=new Chart(document.getElementById(canvasId).getContext('2d'),{
         type:'doughnut',
-        data:{labels:Object.keys(totals),datasets:[{data:Object.values(totals),backgroundColor:THEME_COLORS,borderWidth:0,hoverOffset:6}]},
+        data:{labels,datasets:[{data:Object.values(totals),backgroundColor:colors,borderWidth:0,hoverOffset:6}]},
         options:{responsive:true,maintainAspectRatio:false,cutout:'68%',plugins:{legend:{position:'right',labels:{padding:14,usePointStyle:true,boxWidth:7}}}}
     });
 }
@@ -448,7 +579,7 @@ function renderWordCloud(containerId, app, mode) {
     const scaleSize=c=>maxC===minC?1.4:0.8+((c-minC)/(maxC-minC))*1.6;
     container.innerHTML=shuffled.map(([word,count],i)=>{
         const size=scaleSize(count),color=palette[i%palette.length],opacity=0.55+0.45*((count-minC)/(maxC-minC||1));
-        return `<span class="wc-word" style="font-size:${size}rem;color:${color};opacity:${opacity}" title="${count} mentions">${word}</span>`;
+        return `<span class="wc-word" style="font-size:${size}rem;color:${color};opacity:${opacity}" title="distinctiveness ${(+count).toFixed(1)}">${word}</span>`;
     }).join('');
 }
 

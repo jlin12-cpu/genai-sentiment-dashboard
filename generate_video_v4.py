@@ -102,7 +102,7 @@ def generate_script(data):
     best = max(ov, key=lambda x: x['Avg_Star'])
     ctx  = "\n".join([f"{i['App'].replace('_',' ')}: {i['Avg_Star']:.2f}★ sentiment {i['Avg_Sentiment']:.3f}" for i in ov])
     msg  = client.messages.create(
-        model="claude-sonnet-4-20250514", max_tokens=550,
+        model="claude-sonnet-4-6", max_tokens=550,
         messages=[{"role":"user","content":f"""
 Write a 70-85 second energetic voiceover for a GenAI sentiment dashboard video.
 5 sections matching these slides:
