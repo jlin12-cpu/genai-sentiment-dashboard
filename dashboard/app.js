@@ -6,10 +6,8 @@ let currentProduct = null;
 let wcModes = { overview: 'pos', product: 'pos' };
 let activeReviewTab = 'neg';
 
-// AI analysis: backend proxy (server.py) for live Compare-page generation.
-const COMPARE_API = 'http://localhost:5001/api/compare';
-// Cache compare results per product-pair so re-viewing the same pair is free.
-const compareCache = {};
+// AI analysis is pre-generated offline by generate_insights.py and read straight
+// from insights_data.json — no live backend needed (works on static hosting).
 
 const APP_COLORS = {
     'ChatGPT':           '#10a37f',
@@ -115,8 +113,11 @@ function renderIntro() {
     }
 }
 
-// ── Subscribe (backend → Google Sheets, the same list the weekly mailer reads) ─
-const SUBSCRIBE_API = 'http://localhost:5001/api/subscribe';
+// ── Subscribe (Formspree — works on static hosting, no backend needed) ────────
+// Submissions land in your Formspree inbox. They are NOT auto-added to the weekly
+// list; periodically sync new emails into Google Sheets via:
+//   python subscriber_mailer.py --add <email>
+const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xzdyqgyg';
 
 async function handleSubscribe() {
     const input = document.getElementById('subscribe-email');
@@ -135,23 +136,22 @@ async function handleSubscribe() {
     msg.textContent   = 'Submitting…';
 
     try {
-        const res = await fetch(SUBSCRIBE_API, {
+        const res = await fetch(FORMSPREE_ENDPOINT, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
             body: JSON.stringify({ email })
         });
-        const data = await res.json();
         if (res.ok) {
             msg.style.color = '#15803d';
-            msg.textContent = `✓ ${data.message || "Subscribed!"}`;
+            msg.textContent = `✓ Thanks! You'll receive weekly reports.`;
             input.value = '';
         } else {
             msg.style.color = '#dc2626';
-            msg.textContent = data.error || 'Something went wrong. Please try again.';
+            msg.textContent = 'Something went wrong. Please try again.';
         }
     } catch (e) {
         msg.style.color = '#dc2626';
-        msg.textContent = 'Could not reach the server. Is the backend running? (python server.py)';
+        msg.textContent = 'Network error. Please try again.';
     }
 }
 
@@ -227,48 +227,28 @@ function escapeHTML(s) {
         ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 }
 
-// ── AI Comparison (live: Compare page, via server.py backend) ─────────────────
+// ── AI Comparison (pre-generated offline; read straight from JSON) ────────────
 function compareCacheKey(a, b) {
-    return [a, b].sort().join('::');   // A vs B and B vs A share one cache entry
+    return [a, b].sort().join('::');   // A vs B and B vs A share one key
 }
 
-async function generateCompareAnalysis() {
+// Show the pre-generated comparison for the current pair. No backend call —
+// generate_insights.py writes all 10 pairs into analysis.comparisons each week.
+function showCompareAnalysis() {
     const app1 = document.getElementById('cmp-app1').value;
     const app2 = document.getElementById('cmp-app2').value;
     const body = document.getElementById('compare-analysis-body');
-    const btn  = document.getElementById('cmp-generate-btn');
+    if (!body) return;
 
     if (!app1 || !app2 || app1 === app2) {
-        body.innerHTML = `<p class="ai-analysis-error">Pick two different products first.</p>`;
+        body.innerHTML = `<p class="ai-analysis-hint">Pick two different products to compare.</p>`;
         return;
     }
-
-    const key = compareCacheKey(app1, app2);
-    if (compareCache[key]) {
-        body.innerHTML = `<p class="ai-analysis-text">${escapeHTML(compareCache[key])}</p>`;
-        return;
-    }
-
-    btn.disabled = true;
-    body.innerHTML = `<span class="ai-loading">Analysing&nbsp;</span>`;
-    try {
-        const res = await fetch(COMPARE_API, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ apps: [app1, app2] })
-        });
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || `Request failed (${res.status})`);
-        compareCache[key] = data.analysis;
-        body.innerHTML = `<p class="ai-analysis-text">${escapeHTML(data.analysis)}</p>`;
-    } catch (e) {
-        const hint = e.message.includes('Failed to fetch')
-            ? 'Is the backend running? Start it with: python server.py'
-            : e.message;
-        body.innerHTML = `<p class="ai-analysis-error">⚠ ${escapeHTML(hint)}</p>`;
-    } finally {
-        btn.disabled = false;
-    }
+    const comparisons = dashboardData.analysis && dashboardData.analysis.comparisons;
+    const text = comparisons ? comparisons[compareCacheKey(app1, app2)] : null;
+    body.innerHTML = text
+        ? `<p class="ai-analysis-text">${escapeHTML(text)}</p>`
+        : `<p class="ai-analysis-hint">No comparison available for this pair yet.</p>`;
 }
 
 // ── Compare Page ──────────────────────────────────────────────────────────────
@@ -278,15 +258,8 @@ function renderCompare() {
     const app2 = document.getElementById('cmp-app2').value;
     if (!app1 || !app2 || app1 === app2) return;
 
-    // Reset the AI comparison area for this pair: show cached result if we have
-    // one, otherwise prompt the user to generate.
-    const cmpBody = document.getElementById('compare-analysis-body');
-    if (cmpBody) {
-        const cached = compareCache[compareCacheKey(app1, app2)];
-        cmpBody.innerHTML = cached
-            ? `<p class="ai-analysis-text">${escapeHTML(cached)}</p>`
-            : `<p class="ai-analysis-hint">Generate an AI head-to-head for ${app1.replace('_',' ')} vs ${app2.replace('_',' ')}.</p>`;
-    }
+    // Auto-show the pre-generated comparison for this pair (no button needed).
+    showCompareAnalysis();
     const panels = document.getElementById('compare-panels');
     panels.innerHTML = [app1, app2].map(app => {
         const item = getOverview(app);

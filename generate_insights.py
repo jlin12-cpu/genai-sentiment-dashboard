@@ -156,6 +156,41 @@ def analyse_overview(data):
     return ask_claude(prompt, max_tokens=500)
 
 
+# ── Pairwise comparisons (pre-generated so the Compare page needs no backend) ────
+def _pair_key(a, b):
+    """A vs B and B vs A share one key (sorted), matching the front-end cache key."""
+    return "::".join(sorted([a, b]))
+
+
+def _compare_block(item):
+    app = item["App"].replace("_", " ")
+    pos = ", ".join(list(item["Keywords_Positive"].keys())[:10])
+    neg = ", ".join(list(item["Keywords_Negative"].keys())[:10])
+    one_pct = item["Rating_Distribution"].get("1", 0) / max(item["Total_Reviews"], 1) * 100
+    five_pct = item["Rating_Distribution"].get("5", 0) / max(item["Total_Reviews"], 1) * 100
+    return (
+        f"{app}: {item['Avg_Star']:.2f}* avg | sentiment {item['Avg_Sentiment']:.3f} "
+        f"| std {item['Std_Dev']:.2f} | {item['Total_Reviews']:,} reviews "
+        f"| {five_pct:.1f}% five-star, {one_pct:.1f}% one-star\n"
+        f"    praised for: {pos}\n"
+        f"    complaints:  {neg}"
+    )
+
+
+def analyse_comparison(item_a, item_b):
+    names = f"{item_a['App'].replace('_',' ')} vs {item_b['App'].replace('_',' ')}"
+    blocks = _compare_block(item_a) + "\n" + _compare_block(item_b)
+    prompt = (
+        f"Comparison data for {names} (Google Play review analysis):\n\n{blocks}\n\n"
+        f"{GUIDANCE}\n\n"
+        "In 3-4 sentences, directly compare these two products: where each one wins, "
+        "where it loses, and which to choose for which kind of user. Make the contrast "
+        "explicit (e.g. 'X is stronger for coding while Y is better for research'). "
+        "Do not just describe each separately."
+    )
+    return ask_claude(prompt, max_tokens=400)
+
+
 # ── Main ─────────────────────────────────────────────────────────────────────────
 def main():
     if not ANTHROPIC_API_KEY:
@@ -174,9 +209,22 @@ def main():
         print(f"🤖 Analysing {app.replace('_', ' ')}...")
         products[app] = analyse_product(item)
 
+    # Pre-generate every pairwise comparison (5 products → 10 pairs) so the
+    # Compare page can read them straight from JSON — no live backend needed,
+    # works on the public GitHub Pages site.
+    by_app = {it["App"]: it for it in data["overview"]}
+    app_list = list(by_app.keys())
+    comparisons = {}
+    for i in range(len(app_list)):
+        for j in range(i + 1, len(app_list)):
+            a, b = app_list[i], app_list[j]
+            print(f"🤖 Comparing {a.replace('_',' ')} vs {b.replace('_',' ')}...")
+            comparisons[_pair_key(a, b)] = analyse_comparison(by_app[a], by_app[b])
+
     data["analysis"] = {
         "overview": overview_text,
         "products": products,
+        "comparisons": comparisons,
         "generated_at": datetime.now(timezone.utc).isoformat(),
     }
 
@@ -184,7 +232,7 @@ def main():
         json.dump(data, f)
 
     print(f"✅ Insights written to {DATA_FILE}")
-    print(f"   overview + {len(products)} product analyses")
+    print(f"   overview + {len(products)} product analyses + {len(comparisons)} comparisons")
 
 
 if __name__ == "__main__":
