@@ -45,10 +45,18 @@ jobs:
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git add dashboard/insights_data.json logs/
+          # Pull latest first. --autostash temporarily shelves the pipeline's
+          # working-tree changes (insights_data.json, last_run.json, logs, video,
+          # etc.) so the rebase has a clean tree, then re-applies them. The old
+          # version staged only a few files and ran a bare `git pull --rebase`,
+          # which aborted with "You have unstaged changes" (exit 128) because
+          # other files (e.g. last_run.json, scraper_log.txt) were left dirty —
+          # this is the real cause of the weekly failures since early May.
+          git pull --rebase --autostash origin main
+          # Now stage everything the pipeline produced/changed and commit.
+          git add -A
           git add -f dashboard/weekly_update.mp4
           git diff --staged --quiet || git commit -m "Weekly update $(date +'%Y-%m-%d')"
-          git pull --rebase origin main
           git push
       - name: Restore Google credentials
         run: |
